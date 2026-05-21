@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocxks.io — Play Now!</title>
+    <meta name="description" content="Blocxks.io — A free browser voxel game inspired by Minecraft. Build, explore and survive in a blocky 3D world. No download required!">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%234ee04e'/><rect x='8' y='8' width='16' height='16' fill='%23734c28'/></svg>">
+    <!-- Three.js (r128) -->
+    <script src="js/three.min.js"></script>
+</head>
+<body>
+
+<!-- ============================================================
+     Game Canvas
+     ============================================================ -->
+<canvas id="game-canvas"></canvas>
+
+<!-- ============================================================
+     HUD
+     ============================================================ -->
+<div id="hud">
+    <!-- Crosshair -->
+    <div id="crosshair"></div>
+
+    <!-- Coordinates (top-left) -->
+    <div id="coords">X: 0  Y: 0  Z: 0</div>
+    <div id="fps">60 FPS</div>
+    <div id="mode-indicator">SURVIVAL</div>
+
+    <!-- Chat -->
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Press T to chat, Enter to send…" maxlength="128">
+
+    <!-- Bottom HUD -->
+    <div id="bottom-bar">
+        <div id="status-bars">
+            <div id="health-bar"></div>
+            <div id="hunger-bar"></div>
+        </div>
+        <div id="hotbar"></div>
+    </div>
+
+    <!-- Block name display -->
+    <div id="block-name"></div>
+</div>
+
+<!-- ============================================================
+     Start Screen
+     ============================================================ -->
+<div id="start-screen">
+    <div class="logo">Blocxks<span>.io</span></div>
+    <div class="subtitle">The Free Browser Voxel Game</div>
+
+    <button id="start-btn" class="menu-btn">▶ Play</button>
+    <button class="menu-btn" style="background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.25);"
+        onclick="alert('Multiplayer coming soon! For now, play solo.')">🌐 Multiplayer</button>
+    <button class="menu-btn" style="background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.25);"
+        onclick="showControls()">⚙ Controls</button>
+
+    <div style="margin-top:28px; font-size:0.75rem; color:rgba(255,255,255,0.5); text-align:center; max-width:340px; line-height:1.6;">
+        WASD to move &nbsp;·&nbsp; Space to jump &nbsp;·&nbsp; Left-click to break &nbsp;·&nbsp; Right-click to place<br>
+        F to fly &nbsp;·&nbsp; Scroll/1-9 to select block &nbsp;·&nbsp; Shift to sprint &nbsp;·&nbsp; T to chat
+    </div>
+</div>
+
+<!-- ============================================================
+     Pause Menu
+     ============================================================ -->
+<div id="pause-menu">
+    <div class="panel">
+        <h2>⏸ Paused</h2>
+        <button id="resume-btn" class="menu-btn-panel">▶ Resume</button>
+        <button id="settings-btn" class="menu-btn-panel">⚙ Controls</button>
+        <button class="menu-btn-panel" onclick="location.reload()">🏠 Main Menu</button>
+    </div>
+</div>
+
+<!-- ============================================================
+     Death Screen
+     ============================================================ -->
+<div id="death-screen">
+    <div class="panel">
+        <h2>💀 You Died!</h2>
+        <p>Score: 0 &nbsp;|&nbsp; Time played: <span id="playtime">0s</span></p>
+        <button id="respawn-btn" class="menu-btn-panel">🔄 Respawn</button>
+        <button class="menu-btn-panel" onclick="location.reload()">🏠 Main Menu</button>
+    </div>
+</div>
+
+<!-- Loading bar -->
+<div id="loading-bar"></div>
+
+<!-- ============================================================
+     Scripts (order matters!)
+     ============================================================ -->
+<script src="js/noise.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/world.js"></script>
+<script src="js/player.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+
+<script>
+    // Controls popup
+    function showControls() {
+        alert(
+            'Controls:\n\n' +
+            'W / A / S / D   — Move\n' +
+            'Space           — Jump\n' +
+            'Shift           — Sprint / Descend (fly)\n' +
+            'F               — Toggle Fly Mode\n' +
+            'Left Click      — Break Block\n' +
+            'Right Click     — Place Block\n' +
+            'Scroll Wheel    — Cycle Hotbar\n' +
+            '1 – 9           — Select Hotbar Slot\n' +
+            'T               — Open Chat\n' +
+            'ESC             — Pause / Resume\n'
+        );
+    }
+
+    // Simple FPS counter
+    (function fpsCounter() {
+        let frames = 0, last = performance.now();
+        function tick() {
+            frames++;
+            const now = performance.now();
+            if (now - last >= 1000) {
+                document.getElementById('fps').textContent = frames + ' FPS';
+                frames = 0;
+                last = now;
+            }
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    })();
+
+    // Playtime tracker
+    let startTime = Date.now();
+    setInterval(() => {
+        const secs = Math.floor((Date.now() - startTime) / 1000);
+        const el = document.getElementById('playtime');
+        if (el) {
+            const m = Math.floor(secs / 60), s = secs % 60;
+            el.textContent = m > 0 ? `${m}m ${s}s` : `${s}s`;
+        }
+    }, 1000);
+</script>
+</body>
+</html>

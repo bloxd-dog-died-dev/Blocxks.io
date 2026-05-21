@@ -1,0 +1,451 @@
+/* ============================================================
+   Blocxks.io — Game Styles
+   ============================================================ */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #87ceeb;
+    font-family: 'Segoe UI', 'Press Start 2P', monospace, sans-serif;
+    color: #fff;
+    user-select: none;
+}
+
+/* ============================================================
+   Canvas
+   ============================================================ */
+#game-canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: none;
+}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+#hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ---- Crosshair ---- */
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+}
+
+#crosshair::before,
+#crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 1px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.7);
+}
+
+#crosshair::before {
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+#crosshair::after {
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+/* ---- Bottom bar ---- */
+#bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 10px;
+}
+
+/* ---- Health & Hunger bars ---- */
+#status-bars {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 4px;
+}
+
+#health-bar,
+#hunger-bar {
+    display: flex;
+    gap: 2px;
+}
+
+.heart,
+.hunger {
+    font-size: 14px;
+    line-height: 1;
+    text-shadow: 1px 1px 2px #000;
+    transition: opacity 0.3s, color 0.3s;
+}
+
+/* ---- Hotbar ---- */
+#hotbar {
+    display: flex;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.hotbar-slot {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.1s, background 0.1s;
+}
+
+.hotbar-slot canvas {
+    width: 40px;
+    height: 40px;
+    image-rendering: pixelated;
+    border-radius: 2px;
+}
+
+.hotbar-slot.selected {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+
+.hotbar-label {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 9px;
+    color: rgba(255,255,255,0.6);
+    font-family: monospace;
+}
+
+/* ---- Coordinates ---- */
+#coords {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-size: 11px;
+    color: #ffffffcc;
+    text-shadow: 1px 1px 2px #000;
+    font-family: monospace;
+    background: rgba(0,0,0,0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* ---- Block name tooltip ---- */
+#block-name {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 1px 1px 2px #000;
+    background: rgba(0,0,0,0.4);
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* ---- Chat ---- */
+#chat-log {
+    position: absolute;
+    bottom: 90px;
+    left: 12px;
+    width: 360px;
+    max-height: 140px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#chat-input {
+    display: none;
+    position: absolute;
+    bottom: 68px;
+    left: 12px;
+    width: 360px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    outline: none;
+    font-family: monospace;
+    pointer-events: all;
+    z-index: 20;
+}
+
+/* ---- Mini-map (future) ---- */
+#minimap {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    display: none; /* hidden for now */
+}
+
+/* ============================================================
+   Start Screen
+   ============================================================ */
+#start-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #1a3a5c 0%, #2d6a9f 40%, #5ba3d4 100%);
+}
+
+#start-screen .logo {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 0 #0a1f3a, 6px 6px 0 rgba(0,0,0,0.3);
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+#start-screen .logo span {
+    color: #4ee04e;
+}
+
+#start-screen .subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+#start-screen .menu-btn {
+    width: 240px;
+    padding: 14px 0;
+    margin: 6px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.1s;
+    letter-spacing: 1px;
+}
+
+#start-screen .menu-btn:hover {
+    transform: scale(1.04);
+    filter: brightness(1.15);
+}
+
+#start-btn {
+    background: #4ee04e;
+    color: #0a3a0a;
+    box-shadow: 0 4px 12px rgba(0,200,0,0.4);
+}
+
+/* ============================================================
+   Pause Menu
+   ============================================================ */
+#pause-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+}
+
+#pause-menu .panel {
+    background: rgba(20, 40, 70, 0.95);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+#pause-menu h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+}
+
+.menu-btn-panel {
+    width: 220px;
+    padding: 12px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: background 0.15s;
+    letter-spacing: 1px;
+}
+
+.menu-btn-panel:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+#resume-btn {
+    background: #4ee04e;
+    color: #0a3a0a;
+    border-color: transparent;
+}
+#resume-btn:hover {
+    background: #6eff6e;
+}
+
+/* ============================================================
+   Death Screen
+   ============================================================ */
+#death-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    align-items: center;
+    justify-content: center;
+    background: rgba(120, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+}
+
+#death-screen .panel {
+    background: rgba(40, 0, 0, 0.92);
+    border: 2px solid rgba(255,80,80,0.3);
+    border-radius: 12px;
+    padding: 36px 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(200,0,0,0.4);
+}
+
+#death-screen h2 {
+    font-size: 2rem;
+    color: #ff4444;
+    text-shadow: 2px 2px 8px #ff0000;
+    letter-spacing: 2px;
+}
+
+#death-screen p {
+    color: rgba(255,200,200,0.8);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+#respawn-btn {
+    background: #cc2222;
+    color: #fff;
+    border-color: transparent;
+}
+#respawn-btn:hover {
+    background: #ee4444;
+}
+
+/* ============================================================
+   Loading bar
+   ============================================================ */
+#loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: #4ee04e;
+    z-index: 200;
+    transition: width 0.5s;
+}
+
+/* ============================================================
+   FPS counter
+   ============================================================ */
+#fps {
+    position: absolute;
+    top: 36px;
+    left: 10px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    font-family: monospace;
+    background: rgba(0,0,0,0.25);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   Mode indicator
+   ============================================================ */
+#mode-indicator {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.35);
+    padding: 3px 12px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+/* ============================================================
+   Scrollbar (for chat)
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
